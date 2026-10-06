@@ -174,6 +174,7 @@ After both pipelines, run the scripts in `analysis/` (from anywhere):
 | 4 | `04_simulate_exponentials.py` | nothing (synthetic data) | `analysis/results/simulation_*.csv` |
 | 5 | `05_plot_participant_fits.py` | data and results of both arms | `analysis/figures/qc/<data set>_fits_*` |
 | 6 | `06_paper_figures.py` | data, arm results, `analysis/results/` | `analysis/figures/fig1..fig6_*` |
+| 7 | `07_sensitivity.py` | prepared data, results of both arms | `analysis/results/sensitivity_window.csv` |
 
 Every figure is saved in a light and a dark version, as PNG and SVG (`shared/plot_style.py`).
 

@@ -45,3 +45,12 @@ sets: `treadmill`, `bike_tt1`, `bike_tt2`; signal variants: `cleaned`
   `breakpoint = a + b * TD + c * tau`, the effect of an added slow
   component, and replicates with white noise. Parameters are in the
   script's docstring.
+
+- **sensitivity_window.csv** (`07_sensitivity.py`)
+  The main results with phase II MRT from fixed fitting windows (20 s up
+  to `window` = 90, 120, 150 or 240 s) instead of the iterative window
+  (`window = iterative`). `analysis = validity`: per data set, Pearson `r`
+  (95% CI) between breakpoint and MRT, `mrt_median`, `ratio_median` and
+  `ratio_cv_pct` of breakpoint / MRT. `analysis = reliability_mrt`
+  (`dataset = bike_tt1_vs_tt2`): ICC(3,1) with 95% CI, typical error and
+  Bland-Altman bias and limits of agreement of MRT.
