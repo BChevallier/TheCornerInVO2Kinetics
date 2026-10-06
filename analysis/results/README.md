@@ -12,3 +12,18 @@ sets: `treadmill`, `bike_tt1`, `bike_tt2`; signal variants: `cleaned`
   least-squares `breakpoint = intercept + slope * marker` with 95% CIs;
   the ratio breakpoint / marker (`ratio_median`, `ratio_q1`, `ratio_q3`)
   and its coefficient of variation across participants (`ratio_cv_pct`).
+
+- **reliability.csv** (`02_reliability.py`)
+  Bike tt1 vs tt2, one row per signal variant and quantity: `breakpoint`;
+  phase II `mrt`, `tau`, `td`, `fast_end_95`, `slow_component` (step 08);
+  `mrt_full_window` (mono-exponential over the whole trial, step 06); `t50`,
+  `t90`; `td2_supported` (TD2 where the slow component is supported in both
+  trials). Over participants with both values (`n`): trial means;
+  `icc_3_1` with 95% CI; `typical_error` (SD of differences / sqrt 2) and
+  as % of the mean; Bland-Altman `bias` (tt2 - tt1) with 95% limits of
+  agreement (`loa_low`, `loa_high`) and a paired t-test `bias_p`. Typical
+  errors in % are not comparable between quantities of different size.
+
+- **reliability_slow_component_verdict.csv** (`02_reliability.py`)
+  Agreement of the AICc slow-component verdict between tt1 and tt2 per
+  variant: counts, % agreement and Cohen's kappa.
