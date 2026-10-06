@@ -36,3 +36,12 @@ sets: `treadmill`, `bike_tt1`, `bike_tt2`; signal variants: `cleaned`
   95% limits of agreement, Wilcoxon signed-rank `wilcoxon_p`, and the
   Friedman test across all three variants (`friedman_p`, repeated on both
   rows of a quantity).
+
+- **simulation_grid.csv**, **simulation_grid_fit.csv**,
+  **simulation_slow_component.csv**, **simulation_noise.csv**
+  (`04_simulate_exponentials.py`, no inputs) — the piecewise fit applied to
+  synthetic mono-exponential responses on the real 5-s grid: noise-free
+  over a TD x tau grid (two amplitude pairs), the least-squares fit
+  `breakpoint = a + b * TD + c * tau`, the effect of an added slow
+  component, and replicates with white noise. Parameters are in the
+  script's docstring.
