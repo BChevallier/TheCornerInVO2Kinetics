@@ -57,6 +57,7 @@ shared/                   smoothing and model code used by both arms
   model_selection.py        AICc/BIC comparison of the two exponential models
   phase2_window.py          phase II by the iterative fitting window
   kinetics_markers.py       MRT, 95% time, slow component, t50/t90
+  agreement_stats.py        correlation, regression, ICC, typical error, Bland-Altman
   metrics.py                RMSE as % of signal amplitude
 
 treadmill/
@@ -65,6 +66,9 @@ treadmill/
   data/prepared/          outputs of steps 01-04
   results/                outputs of steps 05, 06, 08: breakpoints, RMSE%, parameters, markers
   figures/                output of step 07
+
+analysis/                 cross-arm comparisons of the arms' results
+  results/                outputs of the analysis scripts
 
 bike/
   scripts/                steps 01-08, run in order
@@ -155,6 +159,14 @@ Two things differ from the treadmill data and are handled in step 2:
 Step 2 also leaves out the excluded participants (`EXCLUDED_PARTICIPANTS`
 in `bike/scripts/bike_common.py`, with the reason for each). Their raw
 exports are kept as recorded.
+
+## Cross-arm analysis
+
+After both pipelines, run the scripts in `analysis/` (from anywhere):
+
+| # | Script | Reads | Writes |
+|---|--------|-------|--------|
+| 1 | `01_validity.py` | piecewise breakpoints, kinetics markers (both arms) | `analysis/results/validity.csv` |
 
 ## Interpreting the two models' "breakpoints"
 
