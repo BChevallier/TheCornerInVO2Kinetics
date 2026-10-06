@@ -157,7 +157,12 @@ Two things differ from the treadmill data and are handled in step 2:
   5-second samples, and the smoothing settings are defined on that grid.
   Step 2 averages V'O2 into 5-second bins from 0 to 240 s, each labelled by
   its end, so t = 0 holds the last 5 s before the start (the pre-trial
-  baseline) as on the treadmill.
+  baseline) as on the treadmill. Because a bin labelled T covers
+  (T - 5, T], its centre is at T - 2.5 s: times estimated on this grid
+  (breakpoint, TD, MRT) sit about 2 s later than on a 1-s grid. This
+  shifts every participant alike and leaves comparisons, correlations and
+  reliability unchanged (`analysis/08_bike_1hz.py`). How the treadmill's
+  5-s samples are labelled is not known.
 
 Step 2 also leaves out the excluded participants (`EXCLUDED_PARTICIPANTS`
 in `bike/scripts/bike_common.py`, with the reason for each). Their raw
