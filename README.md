@@ -59,6 +59,7 @@ shared/                   smoothing and model code used by both arms
   kinetics_markers.py       MRT, 95% time, slow component, t50/t90
   agreement_stats.py        correlation, regression, ICC, typical error, Bland-Altman
   metrics.py                RMSE as % of signal amplitude
+  plot_style.py             light and dark figure themes
 
 treadmill/
   scripts/                steps 01-08, run in order
@@ -69,6 +70,7 @@ treadmill/
 
 analysis/                 cross-arm comparisons of the arms' results
   results/                outputs of the analysis scripts
+  figures/                figures (light and dark), qc/ per-participant fits
 
 bike/
   scripts/                steps 01-08, run in order
@@ -170,6 +172,10 @@ After both pipelines, run the scripts in `analysis/` (from anywhere):
 | 2 | `02_reliability.py` | bike tt1 and tt2 results | `analysis/results/reliability.csv`, `reliability_slow_component_verdict.csv` |
 | 3 | `03_smoothing.py` | results of both arms | `analysis/results/smoothing.csv` |
 | 4 | `04_simulate_exponentials.py` | nothing (synthetic data) | `analysis/results/simulation_*.csv` |
+| 5 | `05_plot_participant_fits.py` | data and results of both arms | `analysis/figures/qc/<data set>_fits_*` |
+| 6 | `06_paper_figures.py` | data, arm results, `analysis/results/` | `analysis/figures/fig1..fig6_*` |
+
+Every figure is saved in a light and a dark version, as PNG and SVG (`shared/plot_style.py`).
 
 ## Interpreting the two models' "breakpoints"
 
