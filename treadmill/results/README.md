@@ -1,7 +1,7 @@
 # Treadmill model results
 
 One row per participant; one column per signal variant: `sg` (Savitzky-Golay),
-`bw` (Butterworth), `cleaned` (unfiltered). Written by `treadmill/scripts/05_fit_piecewise.py` and `06_fit_biexponential.py`.
+`bw` (Butterworth), `cleaned` (unfiltered). Written by `treadmill/scripts/05_fit_piecewise.py`, `06_fit_biexponential.py` and `08_kinetics_markers.py`.
 
 - **piecewise_breakpoints.csv**
   Breakpoint (s) of the two-segment piecewise-linear fit.
@@ -44,3 +44,20 @@ One row per participant; one column per signal variant: `sg` (Savitzky-Golay),
 - **biexponential_breakpoints_selected.csv**
   TD2 where the slow component is supported, empty where it is not. Where
   it is not, the fitted TD2 describes a component the data doesn't support.
+
+- **kinetics_markers.csv**
+  Written by step 08. Per signal variant (two header rows): `mrt` (phase II
+  mean response time, TD1 + tau1, s), `fast_end_95` (TD1 + 3 tau1, s),
+  `slow_component` (mean of the last 20 s minus the phase II asymptote
+  A0 + A1, L/min), `t50`, `t90` (model-free: first time the signal reaches
+  50% / 90% of its rise from t = 0 to the mean of the last 20 s, s). See
+  `shared/kinetics_markers.py`.
+
+- **phase2_params.csv**
+  The phase II mono-exponential fit behind those markers (`A0, A1, tau1,
+  TD1`) and `window_end` (s), the end of its iterative fitting window; 240
+  means the fit never departed from the data. See `shared/phase2_window.py`.
+
+Both exponential models are fitted to t = 0 plus every sample from 20 s on
+(phase I excluded), as the best of a grid of starting points; their RMSE%,
+RSS and AICc cover those samples only. See `shared/exponential_fitting.py`.

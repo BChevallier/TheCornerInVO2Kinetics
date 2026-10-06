@@ -5,15 +5,18 @@ slow component.
 
 It is exactly `biexponential_model.biexponential` with A2 = 0, and uses the
 same bounds for its four parameters, so the two models are nested and can be
-compared directly (see `model_selection.py`). It exists as the null model for
-the question "does this response have a slow component at all?".
+compared directly (see `model_selection.py`). It is the reference model for
+the primary (fast) phase: at severe intensity the on-transient is typically
+mono-exponential (Ozyener et al. 2001). It is also the null model for the
+question "does this response have a slow component at all?". Fitted from
+20 s on (phase I excluded) with a multi-start grid; see
+`exponential_fitting.py`.
 """
 
 import numpy as np
-from scipy.optimize import curve_fit
 
 from biexponential_model import CLAMP_MAX_S, PARAM_BOUNDS as BIEXP_BOUNDS
-from metrics import rmse_percent
+from exponential_fitting import multistart_fit, start_grid
 
 PARAM_NAMES = ["A0", "A1", "tau1", "TD1"]
 
@@ -23,6 +26,12 @@ PARAM_BOUNDS = (
     BIEXP_BOUNDS[1][: len(PARAM_NAMES)],
 )
 
+# Multi-start grid (4 x 3 = 12 starts); A0 and A1 are set from the data.
+START_GRID = {
+    "tau1": [10, 20, 35, 60],
+    "TD1": [0, 8, 16],
+}
+
 
 def monoexponential(t, A0, A1, tau1, TD1):
     t = np.asarray(t)
@@ -30,28 +39,18 @@ def monoexponential(t, A0, A1, tau1, TD1):
     return A0 + A1 * (1 - np.exp(-t1 / tau1))
 
 
-def _initial_guess(y):
-    """Heuristic starting point for curve_fit, in PARAM_NAMES order."""
-    return [y[0], y.max() - y[0], 30, 15]
-
-
 def fit_monoexponential(x, y, y_reference=None):
     """Fit the mono-exponential model to one participant's VO2 series.
 
-    Same contract as `biexponential_model.fit_biexponential`: fitted to `y`,
-    RMSE% scored against `y_reference` (default `y`). Returns (params,
-    rmse_pct), or (all-NaN array, NaN) if the fit fails.
+    Same contract as `biexponential_model.fit_biexponential`: fitted to `y`
+    on the fit window (t = 0 plus t >= 20 s), best of a multi-start grid,
+    RMSE% scored against `y_reference` (default `y`) on that window.
+    Returns (params, rmse_pct), or (all-NaN array, NaN) if every start fails.
     """
+    y = np.asarray(y, dtype=float)
     if y_reference is None:
         y_reference = y
-    try:
-        popt, _ = curve_fit(
-            monoexponential, x, y,
-            p0=_initial_guess(y),
-            bounds=PARAM_BOUNDS,
-            maxfev=10000,
-        )
-        y_hat = monoexponential(x, *popt)
-        return popt, rmse_percent(y_reference, y_hat)
-    except Exception:
-        return np.full(len(PARAM_NAMES), np.nan), np.nan
+    starts = start_grid({"A0": y[0], "A1": y.max() - y[0]}, START_GRID)
+    return multistart_fit(
+        monoexponential, PARAM_NAMES, PARAM_BOUNDS, x, y, y_reference, starts
+    )

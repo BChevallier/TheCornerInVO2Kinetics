@@ -22,6 +22,8 @@ which penalizes parameters more heavily, is reported alongside for
 comparison. The same information-criterion approach to choosing between
 model families is used by Buchwald & Sveiczer (2006).
 
+n and RSS cover the fit window only (t = 0 plus t >= 20 s; see
+`exponential_fitting.py`): phase I is not part of either model.
 RSS is always computed against the unfiltered signal, as for RMSE%. For the
 smoothed variants the models were fitted to the smoothed series, so the
 criteria are an approximation there; the unfiltered ("cleaned") variant is the
@@ -34,6 +36,7 @@ import pandas as pd
 from biexponential_model import PARAM_BOUNDS as BIEXP_BOUNDS
 from biexponential_model import PARAM_NAMES as BIEXP_PARAMS
 from biexponential_model import biexponential, fit_biexponential
+from exponential_fitting import fit_window
 from monoexponential_model import PARAM_NAMES as MONO_PARAMS
 from monoexponential_model import fit_monoexponential, monoexponential
 
@@ -71,11 +74,13 @@ def compare_exponential_models(x, y, y_reference):
     whether the slow component is supported, and which bi-exponential
     parameters ended at a bound.
     """
+    x = np.asarray(x)
     y_reference = np.asarray(y_reference)
-    n = len(y_reference)
+    mask = fit_window(x)
+    n = int(mask.sum())
 
-    popt_bi, rmse_bi = fit_biexponential(x, y, y_reference)
     popt_mono, rmse_mono = fit_monoexponential(x, y, y_reference)
+    popt_bi, rmse_bi = fit_biexponential(x, y, y_reference, mono_params=popt_mono)
 
     result = {
         "popt_bi": popt_bi,
@@ -87,8 +92,9 @@ def compare_exponential_models(x, y, y_reference):
         result.update(slow_component_supported=np.nan, bi_params_at_bounds="")
         return result
 
-    rss_bi = np.sum((y_reference - biexponential(x, *popt_bi)) ** 2)
-    rss_mono = np.sum((y_reference - monoexponential(x, *popt_mono)) ** 2)
+    xw, yw = x[mask], y_reference[mask]
+    rss_bi = np.sum((yw - biexponential(xw, *popt_bi)) ** 2)
+    rss_mono = np.sum((yw - monoexponential(xw, *popt_mono)) ** 2)
     aicc_bi = aicc(rss_bi, n, len(BIEXP_PARAMS))
     aicc_mono = aicc(rss_mono, n, len(MONO_PARAMS))
     bic_bi = bic(rss_bi, n, len(BIEXP_PARAMS))
