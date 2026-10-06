@@ -140,6 +140,7 @@ trial argument (`tt1` or `tt2`) and runs both when given none.
 | 5 | `05_fit_piecewise.py` | all three time series | `results/<trial>_piecewise_*.csv` (breakpoints, parameters, RMSE%) |
 | 6 | `06_fit_biexponential.py` | all three time series | `results/<trial>_biexponential_*.csv`, `results/<trial>_monoexponential_*.csv`, `results/<trial>_exponential_model_selection.csv` |
 | 7 | `07_plot_participants.py` | filtered data (+ optionally step 5's breakpoints) | `figures/<trial>_participants.png` |
+| 9 | `09_prepare_1hz_time_trial.py` | per-second CSVs + delays | `data/prepared/<trial>_time_trial_1hz.csv` (unfiltered, 1-s bins; for `analysis/08_bike_1hz.py`) |
 | 8 | `08_kinetics_markers.py` | all three time series | `results/<trial>_kinetics_markers.csv`, `results/<trial>_phase2_params.csv` |
 
 Paths are relative to `bike/`. Steps 3-8 call the same `shared/` functions
@@ -175,6 +176,7 @@ After both pipelines, run the scripts in `analysis/` (from anywhere):
 | 5 | `05_plot_participant_fits.py` | data and results of both arms | `analysis/figures/qc/<data set>_fits_*` |
 | 6 | `06_paper_figures.py` | data, arm results, `analysis/results/` | `analysis/figures/fig1..fig6_*` |
 | 7 | `07_sensitivity.py` | prepared data, results of both arms | `analysis/results/sensitivity_window.csv` |
+| 8 | `08_bike_1hz.py` | bike 5-s and 1-s prepared data | `analysis/results/bike_1hz_*.csv` |
 
 Every figure is saved in a light and a dark version, as PNG and SVG (`shared/plot_style.py`).
 

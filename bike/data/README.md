@@ -22,3 +22,6 @@ breath-by-breath (exported at 1 s) on a Cortex MetaLyzer 3B spirometer.
   - `<trial>_time_trial.csv` — 5-s mean V'O2 (`02_prepare_time_trial_data.py`)
   - `<trial>_time_trial_sg_filtered.csv` — Savitzky-Golay smoothed (`03`)
   - `<trial>_time_trial_bw_filtered.csv` — Butterworth smoothed (`04`)
+  - `<trial>_time_trial_1hz.csv` — unfiltered V'O2 in 1-s bins, t = 0 the
+    5-s pre-trial baseline (`09_prepare_1hz_time_trial.py`); a sampling
+    sensitivity input, not fitted by the arm pipeline

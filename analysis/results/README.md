@@ -54,3 +54,14 @@ sets: `treadmill`, `bike_tt1`, `bike_tt2`; signal variants: `cleaned`
   `ratio_cv_pct` of breakpoint / MRT. `analysis = reliability_mrt`
   (`dataset = bike_tt1_vs_tt2`): ICC(3,1) with 95% CI, typical error and
   Bland-Altman bias and limits of agreement of MRT.
+
+- **bike_1hz_participants.csv**, **bike_1hz_summary.csv** (`08_bike_1hz.py`)
+  The bike data refitted at 1-s resolution (unfiltered; prepared by
+  `bike/scripts/09_prepare_1hz_time_trial.py`). Per participant: breakpoint
+  (`bp`) and phase II MRT from fixed windows (`mrt90`, `mrt120`, `mrt150`)
+  at 5 s and 1 s. Summary: `agreement` (1 s vs 5 s within participants:
+  median and max absolute difference, bias, limits of agreement),
+  `validity` (breakpoint vs MRT: r with 95% CI, ratio median and CV) and
+  `reliability` (tt1 vs tt2: ICC(3,1), typical error, bias). Bins are
+  labelled by their end, so 5-s times sit ~2 s later than 1-s times by
+  construction (bin midpoints at T - 2.5 s vs T - 0.5 s).
