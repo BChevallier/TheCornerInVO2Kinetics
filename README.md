@@ -168,6 +168,7 @@ After both pipelines, run the scripts in `analysis/` (from anywhere):
 |---|--------|-------|--------|
 | 1 | `01_validity.py` | piecewise breakpoints, kinetics markers (both arms) | `analysis/results/validity.csv` |
 | 2 | `02_reliability.py` | bike tt1 and tt2 results | `analysis/results/reliability.csv`, `reliability_slow_component_verdict.csv` |
+| 3 | `03_smoothing.py` | results of both arms | `analysis/results/smoothing.csv` |
 
 ## Interpreting the two models' "breakpoints"
 

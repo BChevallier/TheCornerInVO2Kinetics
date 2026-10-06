@@ -27,3 +27,12 @@ sets: `treadmill`, `bike_tt1`, `bike_tt2`; signal variants: `cleaned`
 - **reliability_slow_component_verdict.csv** (`02_reliability.py`)
   Agreement of the AICc slow-component verdict between tt1 and tt2 per
   variant: counts, % agreement and Cohen's kappa.
+
+- **smoothing.csv** (`03_smoothing.py`)
+  One row per data set, quantity (`breakpoint`, `mrt`, `tau`, `t50`,
+  `piecewise_rmse_pct`, `monoexponential_rmse_pct`) and smoothed variant
+  (`sg`, `bw`) compared with `cleaned` within participants: medians,
+  median and maximum absolute difference, `bias` (variant - cleaned) with
+  95% limits of agreement, Wilcoxon signed-rank `wilcoxon_p`, and the
+  Friedman test across all three variants (`friedman_p`, repeated on both
+  rows of a quantity).
