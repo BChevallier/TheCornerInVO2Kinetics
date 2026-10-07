@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Four Minutes, Two Lines</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <style>
+    /* True black (user preference). Slide figures come from presentation/scripts
+       with the same black (slide_style.py), so they sit flush on the slides. */
+    :root {
+      --surface: #000000;
+      --text: #ffffff;
+      --text-secondary: #c3c2b7;
+      --muted: #898781;
+      --accent: #d95926;      /* series 2, orange */
+      --r-background-color: var(--surface);
+      --r-main-color: var(--text);
+      --r-heading-color: var(--text);
+      --r-heading-text-transform: none;
+      --r-main-font-size: 34px;
+    }
+    .reveal-viewport { background: var(--surface); }
+    .reveal h2 { font-size: 1.5em; }
+    .reveal figure { margin: 0; }
+    .reveal figure img { max-height: 520px; margin: 0; }
+    .placeholder { color: var(--muted); font-style: italic; }
+
+    /* Title above a graph: centred, same height on every slide. A slide holding
+       one fills the whole slide height, so reveal's vertical centring (which
+       otherwise moves the title with the content's height) pins it to the top. */
+    .reveal .slides section:has(> h2.slide-title) { height: 100%; }
+    .reveal h2.slide-title { text-align: center; margin: 0.5em 0 0.6em; }
+
+    /* Slide 1 */
+    .opener .clock { font-size: 2.2em; font-weight: 600; color: var(--text); }
+    .opener .run {
+      font-size: 5.5em; font-weight: 800; color: var(--accent);
+      letter-spacing: 0.04em; margin-top: 0.2em;
+    }
+
+    /* Slide 2: sample */
+    .sample .count { font-size: 2em; font-weight: 600; margin: 0.25em 0; }
+    .sample .num { color: var(--accent); }
+    .sample .twice { color: var(--text-secondary); font-weight: 400; }
+
+    /* Two figures side by side */
+    .pair { display: flex; gap: 0.6em; justify-content: center; }
+    .pair figure { flex: 1; }
+    .reveal .pair figure img { max-height: none; width: 100%; }
+    .graph-label { font-size: 0.9em; color: var(--text-secondary); margin: 0.3em 0 0; }
+    .reveal .r-stack img { max-height: 520px; margin: 0; }
+
+    /* Section 5: modelling */
+    .reveal ul.issues { font-size: 1.1em; line-height: 1.6; }
+    .maybe { color: var(--accent); }
+    .reveal ul.conditions { list-style: none; }
+
+    /* Inspiration column: reference lists */
+    .refs-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; width: 94%; margin: 0 auto; }
+    .reveal ul.refs { list-style: none; margin: 0; font-size: 0.5em; text-align: left; }
+    .reveal ul.refs li { margin: 0 0 0.75em; }
+    .reveal ul.refs a { color: var(--text); font-weight: 600; text-decoration: underline;
+      text-decoration-color: var(--accent); text-underline-offset: 0.15em; }
+    .reveal ul.refs a:hover { color: var(--accent); }
+    .ref-title { color: var(--text-secondary); }
+    .ref-why { display: block; color: var(--muted); font-style: italic; }
+
+    /* Closing slide */
+    .closing .thanks { font-size: 1.3em; font-weight: 600; margin-bottom: 1.2em; }
+    .reveal .closing a.result-link { color: var(--text); text-decoration: underline;
+      text-decoration-color: var(--accent); text-underline-offset: 0.2em; }
+    .reveal .closing a.result-link:hover { color: var(--accent); }
+
+    /* Summary slide: 2x2 grid of earlier plots */
+    .reveal h2.summary-title { font-size: 1.15em; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2em 1em; width: 80%; margin: 0 auto; }
+    .reveal .grid2 img { width: 100%; max-height: none; margin: 0; }
+    .grid2 .graph-label { margin: 0 0 0.2em; font-size: 0.75em; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- 1. Opener -->
+    <section class="opener">
+      <p class="clock">You have four minutes.</p>
+      <p class="run fragment">RUN!</p>
+      <aside class="notes">
+          <p>That's more or less what our participants were told. Four minutes, as hard as you can: the runners on a treadmill at a fixed speed, the cyclists at whatever pace they thought they could hold.</p>
+          <p>Meanwhile a mask measured their breathing: how much oxygen goes in, how much comes back out. The difference is VO₂, the oxygen the body is actually using. That's the number this whole talk is about.</p>
+      </aside>
+    </section>
+
+    <!-- 2. The sample (vertical stack: headline, then age chart below) -->
+    <section>
+      <section class="sample">
+        <p class="count"><span class="num">37</span> runners.</p>
+        <p class="count"><span class="num">27</span> cyclists <span class="twice">(twice each)</span>.</p>
+        <aside class="notes">
+          <p>Two groups, and nobody did both. The runners did the four minutes once, the cyclists twice. That second trial comes in handy later: it tells us whether we get the same answer twice.</p>
+        </aside>
+      </section>
+      <section>
+        <figure><img src="figures/sample_ages_dark.png" alt="Dot histogram of age, one dot per person, women and men coloured: 37 runners (15 women, 22 men, median age 24, 16-40) and 27 cyclists (13 women, 14 men, median age 28, 20-47)"></figure>
+        <aside class="notes">
+          <p class="fact">Fitness (relative VO₂, mL/kg/min, mean ± SD):</p>
+          <p class="fact">Runners — VO₂max 62.6 ± 6.8 (women 56.2 ± 3.2, men 67.0 ± 4.7).</p>
+          <p class="fact">Cyclists — VO₂peak 57.2 ± 6.5 (women 52.9 ± 4.9, men 61.3 ± 5.0); best power women 250 ± 34 W, men 358 ± 46 W.</p>
+          <p class="fact">Age: runners median 24 (16–40), cyclists median 28 (20–47).</p>
+          <p>Young, fit, roughly half women. The fitness numbers above aren't measured the same way in both groups, so I don't compare runners with cyclists.</p>
+        </aside>
+      </section>
+    </section>
+
+    <!-- 3. Expected VO2 over time by intensity (schematic; same axes throughout).
+         First slide: empty frame, fragment swaps in the curve + label. -->
+    <section>
+      <section>
+        <h2 class="slide-title">How was the data supposed to look?</h2>
+        <div class="r-stack">
+          <img class="fragment fade-out" data-fragment-index="0" src="figures/domain_empty_dark.png" alt="Empty graph: oxygen uptake against time in minutes">
+          <img class="fragment" data-fragment-index="0" src="figures/domain_moderate_dark.png" alt="Schematic: oxygen uptake rises after exercise starts and levels off within about two minutes, well below VO2max">
+        </div>
+        <p class="graph-label fragment" data-fragment-index="0">Moderate</p>
+        <aside class="notes">
+          <p>When you start exercising, your oxygen use doesn't jump up instantly. It takes a while to catch up, and until it does you're running on credit. The faster it rises, the smaller the debt. That's why people care about how fast VO₂ rises: it gets faster with training and slower with age and disease.</p>
+          <p>At moderate intensity it's boring in the best way: up, then flat within two minutes or so.</p>
+        </aside>
+      </section>
+      <section>
+        <h2 class="slide-title">How was the data supposed to look?</h2>
+        <div class="r-stack"><img src="figures/domain_heavy_dark.png" alt="Schematic: oxygen uptake rises quickly, then keeps creeping up for several minutes, staying below VO2max"></div>
+        <p class="graph-label">Heavy</p>
+        <aside class="notes">
+          <p>Push harder and it no longer flattens nicely. After the quick rise there's a slow creep upwards: more oxygen for the same work. It does level off, just late.</p>
+        </aside>
+      </section>
+      <section>
+        <h2 class="slide-title">How was the data supposed to look?</h2>
+        <div class="pair">
+          <figure><img src="figures/domain_severe_max_dark.png" alt="Schematic: oxygen uptake keeps rising, reaches VO2max at about 3 minutes and stays there until the stop at 4 minutes"></figure>
+          <figure><img src="figures/domain_severe_early_dark.png" alt="Schematic: oxygen uptake keeps rising and is still below VO2max at the stop at 4 minutes"></figure>
+        </div>
+        <p class="graph-label">Severe</p>
+        <aside class="notes">
+          <p>Harder still and there's no flat part anymore. VO₂ keeps climbing until it hits your maximum, or until you stop. Our four-minute all-out efforts live here.</p>
+          <p>Left: hits the ceiling before time is up. Right: still climbing when the four minutes end.</p>
+        </aside>
+      </section>
+    </section>
+
+    <!-- 4. Real data in the same frame: cleanest runner and cyclist side by side
+         (presentation/scripts/vo2_examples.py says how they were picked).
+         Both frames start empty; click 1 fills the runner, click 2 the cyclist.
+         Below: every participant (sample_grids.py), one slide per data set. -->
+    <section>
+      <section>
+        <h2 class="slide-title">How did the data actually look?</h2>
+        <div class="pair">
+          <figure>
+            <div class="r-stack">
+              <img class="fragment fade-out" data-fragment-index="0" src="figures/domain_empty_narrow_dark.png" alt="Empty graph: oxygen uptake against time in minutes">
+              <img class="fragment" data-fragment-index="0" src="figures/example_runner_dark.png" alt="One runner's measured oxygen uptake every 5 seconds over the 4-minute bout: a steep rise in the first minute, then a slow creep upward">
+            </div>
+            <p class="graph-label fragment" data-fragment-index="0">Runner</p>
+          </figure>
+          <figure>
+            <div class="r-stack">
+              <img class="fragment fade-out" data-fragment-index="1" src="figures/domain_empty_narrow_dark.png" alt="Empty graph: oxygen uptake against time in minutes">
+              <img class="fragment" data-fragment-index="1" src="figures/example_cyclist_dark.png" alt="One cyclist's measured oxygen uptake every 5 seconds over the 4-minute bout: a steep rise in the first minute, then nearly flat with a slight creep upward">
+            </div>
+            <p class="graph-label fragment" data-fragment-index="1">Cyclist</p>
+          </figure>
+        </div>
+        <aside class="notes">
+          <p>These are the two cleanest traces we had.</p>
+        </aside>
+      </section>
+      <section>
+        <h2 class="slide-title">How did the data actually look?</h2>
+        <div class="r-stack"><img src="figures/grid_treadmill_dark.png" alt="All 37 runners: one small graph per person of measured oxygen uptake over the 4-minute bout, each scaled to the person's own maximum"></div>
+        <p class="graph-label">Runners (n = 37)</p>
+        <aside class="notes">
+          <p>And this is everybody.</p>
+        </aside>
+      </section>
+      <section>
+        <h2 class="slide-title">How did the data actually look?</h2>
+        <div class="r-stack"><img src="figures/grid_bike_tt1_dark.png" alt="All 27 cyclists, first trial: one small graph per person of measured oxygen uptake over the 4-minute bout, each scaled to the person's own maximum"></div>
+        <p class="graph-label">Cyclists, first trial (n = 27)</p>
+        <aside class="notes">
+          <p>The cyclists, first trial. Same story.</p>
+        </aside>
+      </section>
+      <section>
+        <h2 class="slide-title">How did the data actually look?</h2>
+        <div class="r-stack"><img src="figures/grid_bike_tt2_dark.png" alt="All 27 cyclists, second trial: one small graph per person of measured oxygen uptake over the 4-minute bout, each scaled to the person's own maximum"></div>
+        <p class="graph-label">Cyclists, second trial (n = 27)</p>
+        <aside class="notes">
+          <p>Second trial. Orange box: the cyclist from before.</p>
+        </aside>
+      </section>
+    </section>
+
+    <!-- 5. Modelling: the usual bi-exponential, its issues, the piecewise alternative.
+       Example runner HA2610 (presentation/scripts/vo2_models.py says why).
+       Three horizontal slides (a row), not a vertical stack.
+       Build-ups are cumulative images stacked in an r-stack: each fragment
+       image covers the previous one. -->
+    <section>
+      <h2 class="slide-title">How VO₂ kinetics are usually modeled.</h2>
+      <div class="r-stack">
+        <img src="figures/model_data_dark.png" alt="One runner's measured oxygen uptake every 5 seconds over the 4-minute bout">
+        <img class="fragment" src="figures/model_biexp_dark.png" alt="The same data with the fitted bi-exponential curve">
+        <img class="fragment" src="figures/model_phase1_dark.png" alt="Phase I marked: from the start to the beginning of the main rise">
+        <img class="fragment" src="figures/model_phase2_dark.png" alt="Phase II marked: the main rise, until about 2 minutes">
+        <img class="fragment" src="figures/model_phase3_dark.png" alt="Phase III marked: the slow rise from about 2 minutes to the end">
+      </div>
+      <aside class="notes">
+          <p>The standard way to get a number out of this is to fit a curve, here two exponentials stacked on top of each other.</p>
+          <p>Phase I: the first seconds, before blood from the working muscles reaches the lungs. The model skips it on purpose. Phase II: the main rise, the part everyone cares about. Phase III: the slow creep.</p>
+          <p>The number I'll use later is the mean response time: the delay plus the time constant of phase II. Roughly, the time it takes to get two-thirds of the way up.</p>
+      </aside>
+    </section>
+    <section>
+      <h2 class="slide-title">Issues</h2>
+      <ul class="issues">
+        <li>Pain to implement</li>
+        <li>Requires arbitrary starting parameters</li>
+        <li>Potential for overfitting</li>
+      </ul>
+      <aside class="notes">
+          <p>Pain to implement: you decide where phase I ends, whether there even is a phase III, and where to stop fitting.</p>
+          <p>Arbitrary starting values: the fit needs a first guess, and the guess changes the answer. When we tried 29 different starting points, 27 of 37 runners ended up with a better fit than with our first guess.</p>
+          <p>Overfitting: seven parameters for about fifty data points, several of which trade off against each other.</p>
+      </aside>
+    </section>
+    <section>
+      <h2 class="slide-title">A solution?<span class="fragment maybe" data-fragment-index="1"> Probably not.</span></h2>
+      <div class="r-stack">
+        <img src="figures/model_biexp_dark.png" alt="The runner's data with the fitted bi-exponential curve">
+        <img class="fragment" data-fragment-index="0" src="figures/model_piecewise_dark.png" alt="The same data and curve with a two-segment straight-line fit in orange: a steep line for the rise, a shallow one after it">
+        <img class="fragment" data-fragment-index="2" src="figures/model_breakpoint_dark.png" alt="The corner where the two straight lines meet is circled, with an arrow and the caption: But that might be useful">
+      </div>
+      <aside class="notes">
+          <p class="fact">Contrary to any physiological process.</p>
+          <p>Two straight lines. Nothing in your body does a straight line and then a sharp corner, so as a model of physiology it's simply wrong.</p>
+          <p>But the corner, where the two lines meet, lands in a remarkably consistent place.</p>
+      </aside>
+    </section>
+
+    <!-- 8-9. Why the corner might be useful (row continues). presentation/scripts/usefulness.py -->
+    <section>
+      <h2 class="slide-title">It follows the model.</h2>
+      <div class="r-stack"><img src="figures/useful_tracks_dark.png" alt="Scatter plot: each person's corner against the model's average duration of the main rise, for runners and cyclists; the points follow a dashed line where the corner equals 1.6 times the model value"></div>
+      <aside class="notes">
+          <p class="fact">Corner vs phase II MRT (unfiltered): r = 0.88 runners, 0.91 cyclists trial 1, 0.80 trial 2.</p>
+          <p class="fact">Corner ≈ 1.6 × MRT (median ratio 1.58 / 1.62 / 1.60).</p>
+          <p class="fact">Caveat: the 1.6 holds for typical kinetics (tau ~10–24 s); slower risers give ~1.3–1.5.</p>
+          <p>Each dot is one person. Along the bottom, the model's answer for how long the main rise takes. Up the side, where the corner sits. They line up: the corner is about 1.6 times the model's number, in runners and cyclists alike.</p>
+          <p>So the corner carries most of the same information, without fitting a single exponential.</p>
+      </aside>
+    </section>
+    <section>
+      <h2 class="slide-title">It repeats as well as the model.</h2>
+      <div class="r-stack"><img src="figures/useful_repeat_dark.png" alt="Each cyclist's value in trial 1 joined to trial 2 by a line, for the model (left) and the corner (right); both panels span the same number of seconds and the lines are similarly flat"></div>
+      <aside class="notes">
+          <p class="fact">27 cyclists, trial 1 vs trial 2. Typical error: corner 3.5 s, MRT 3.3 s — comparable, not better.</p>
+          <p class="fact">ICC: corner 0.73, MRT 0.64 (MRT from fixed 90–150 s windows: 0.74–0.79). CIs overlap.</p>
+          <p class="fact">Both panels span 45 s, so steepness compares directly.</p>
+          <p>The cyclists, first trial to second. Flat lines mean the same answer twice. The corner wobbles about as much as the model does. Not better, not worse, and that's good enough to be useful.</p>
+      </aside>
+    </section>
+
+    <!-- 10. Smoothing (row continues).
+         presentation/scripts/smoothing_shift.py -->
+    <section>
+      <h2 class="slide-title">Smoothing the data barely moves it.</h2>
+      <div class="r-stack"><img src="figures/smoothing_shift_dark.png" alt="How much smoothing the data changes each result, in seconds: the model's tau shifts upward by about a second on average and up to 10 seconds, while the corner stays close to zero"></div>
+      <aside class="notes">
+          <p class="fact">Change = smoothed − unfiltered, per person; both filters (Savitzky-Golay, Butterworth) and all three data sets pooled.</p>
+          <p class="fact">Corner: median shift 0.2–0.5 s (max 3.6 s), within ±2.7 s — smaller than the 3.5 s trial-to-trial difference.</p>
+          <p class="fact">Tau: systematically LONGER after smoothing, +0.6 to +2.2 s on average (p &lt; 0.001 everywhere), up to +10 s.</p>
+          <p class="fact">Smoothing makes the rise look slower to the model; the corner doesn't care.</p>
+          <p>People usually smooth VO₂ data before fitting, to tame the noise. Smoothing makes the rise look slower to the model, so its number drifts up. The corner doesn't care.</p>
+          <p>Same story if we use one-second data instead of five-second averages.</p>
+      </aside>
+    </section>
+
+    <!-- 11. Summary: one word per earlier corner plot, 2x2 grid (row continues).
+         Click 1: orange " Maybe." in the title. -->
+    <section>
+      <h2 class="slide-title summary-title">A simple, robust, meaningful, and repeatable marker for VO₂ kinetics.<span class="fragment maybe" data-fragment-index="0"> Maybe.</span></h2>
+      <div class="grid2">
+        <figure>
+          <img src="figures/model_breakpoint_dark.png" alt="The two-line fit with the corner circled">
+          <p class="graph-label">Simple</p>
+        </figure>
+        <figure>
+          <img src="figures/smoothing_shift_dark.png" alt="Smoothing moves the model's tau but leaves the corner near zero">
+          <p class="graph-label">Robust</p>
+        </figure>
+        <figure>
+          <img src="figures/useful_tracks_dark.png" alt="Corner against the model's average rise duration, following the 1.6 line">
+          <p class="graph-label">Meaningful</p>
+        </figure>
+        <figure>
+          <img src="figures/useful_repeat_dark.png" alt="Cyclists' trial 1 to trial 2 lines, model and corner similarly flat">
+          <p class="graph-label">Repeatable</p>
+        </figure>
+      </div>
+      <aside class="notes">
+          <p>Simple: two lines, no starting values, no decisions about phases. Robust: smoothing barely moves it. Meaningful: it follows the established number. Repeatable: the same answer twice, as well as the model does.</p>
+          <p>Maybe.</p>
+      </aside>
+    </section>
+
+    <!-- 12. Limitations, phrased as conditions that continue the title (row continues). -->
+    <section>
+      <h2 class="slide-title">As long as...</h2>
+      <ul class="issues conditions">
+        <li>...the effort is all-out</li>
+        <li>...VO₂ rises at a typical speed</li>
+        <li>...it's compared within the same kind of test</li>
+        <li>...we were neither unlucky nor stupid</li>
+      </ul>
+      <aside class="notes">
+          <p class="fact">All-out: only 4-min maximal (severe/extreme) bouts were tested; moderate and heavy intensity are untested.</p>
+          <p class="fact">Typical speed: corner ≈ 1.6 × MRT holds for tau ~10–24 s; slower risers give ~1.3–1.5 (tau 30 → 1.51, tau 50 → 1.31), so dividing by 1.6 misjudges MRT by ~20%.</p>
+          <p class="fact">Same kind of test: runners and cyclists were different people, protocols and data sources; repeatability was only measured in the 27 cyclists (typical error 3.5 s, comparable to MRT 3.3 s).</p>
+          <p class="fact">Unlucky/stupid: one data set, not yet replicated elsewhere; our own analysis choices (phase II window stopping rule, 5-s bins, 20-s phase I cutoff). The code is public, so anyone can check.</p>
+          <p class="fact">Open: second-trial corners cluster at 43–48 s, cause unknown (possibly the task before TT2; unconfirmed).</p>
+          <p>So: a cheap, boring, useful number, as long as these hold.</p>
+          <p>The paper is on its way. Code and data are public on GitHub, so you can check whether we were unlucky or stupid.</p>
+      </aside>
+    </section>
+
+    <!-- 13. Inspiration: one slide, the field | the papers
+         behind this work side by side. All IDs from LITERATURE.md (DOI where
+         recorded, else PubMed). -->
+    <section>
+      <h2 class="slide-title">Inspiration</h2>
+      <div class="refs-pair">
+        <ul class="refs">
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/5056210/" target="_blank" rel="noopener">Whipp &amp; Wasserman (1972)</a> <span class="ref-title">Oxygen uptake kinetics for various intensities of constant-load work. <em>J Appl Physiol</em></span><span class="ref-why">Where the slow component got its name</span></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/6809716/" target="_blank" rel="noopener">Whipp et al. (1982)</a> <span class="ref-title">Parameters of ventilatory and gas exchange dynamics during exercise. <em>J Appl Physiol</em></span><span class="ref-why">The three-phase picture</span></li>
+          <li><a href="https://doi.org/10.1152/jappl.1991.71.6.2099" target="_blank" rel="noopener">Barstow &amp; Molé (1991)</a> <span class="ref-title">Linear and nonlinear characteristics of oxygen uptake kinetics during heavy exercise. <em>J Appl Physiol</em></span><span class="ref-why">The two-delay bi-exponential model we used</span></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/11410644/" target="_blank" rel="noopener">Özyener et al. (2001)</a> <span class="ref-title">Influence of exercise intensity on the on- and off-transient kinetics of pulmonary oxygen uptake in humans. <em>J Physiol</em></span><span class="ref-why">How the curve changes across intensity domains</span></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/23798293/" target="_blank" rel="noopener">Poole &amp; Jones (2012)</a> <span class="ref-title">Oxygen uptake kinetics. <em>Compr Physiol</em></span><span class="ref-why">The review to start with</span></li>
+        </ul>
+        <ul class="refs">
+          <li><a href="https://doi.org/10.3389/fphys.2017.00740" target="_blank" rel="noopener">McNulty &amp; Robergs (2017)</a> <span class="ref-title">New methods for processing and quantifying VO₂ kinetics to steady state: VO₂ onset kinetics. <em>Front Physiol</em></span><span class="ref-why">A straight line fits the early rise at least as well as an exponential</span></li>
+          <li><a href="https://doi.org/10.3389/fphys.2025.1547662" target="_blank" rel="noopener">Robergs et al. (2025)</a> <span class="ref-title">VO₂ linear-onset kinetics spanning steady- and non-steady-state exercise. <em>Front Physiol</em></span><span class="ref-why">The same idea, up to severe intensity</span></li>
+          <li><a href="https://doi.org/10.1007/s00421-012-2323-y" target="_blank" rel="noopener">Spencer et al. (2012)</a> <span class="ref-title">Characterizing the profile of muscle deoxygenation during ramp incremental exercise in young men. <em>Eur J Appl Physiol</em></span><span class="ref-why">Two lines beat a smooth curve, in muscle oxygen data</span></li>
+          <li><a href="https://doi.org/10.1152/japplphysiol.00712.2005" target="_blank" rel="noopener">Bernard et al. (2006)</a> <span class="ref-title">On the modeling of breath-by-breath oxygen uptake kinetics at the onset of high-intensity exercises. <em>J Appl Physiol</em></span><span class="ref-why">The bi-exponential answer depends on the fitting algorithm</span></li>
+          <li><a href="https://doi.org/10.2165/11319670-000000000-00000" target="_blank" rel="noopener">Robergs, Dwyer &amp; Astorino (2010)</a> <span class="ref-title">Recommendations for improved data processing from expired gas analysis indirect calorimetry. <em>Sports Med</em></span><span class="ref-why">Where our smoothing filter setting comes from</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 14. Closing. The links are deliberately empty
+         until the paper exists. -->
+    <section class="closing">
+      <p class="thanks">Thanks to <a href="" class="result-link">Yannick Sondermann</a> for this incredibly fun opportunity.</p>
+      <p class="result"><a href="" class="result-link">Here is the result of our collaboration</a></p>
+    </section>
+
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({ hash: true, transition: "fade", plugins: [RevealNotes] });
+</script>
+</body>
+</html>
